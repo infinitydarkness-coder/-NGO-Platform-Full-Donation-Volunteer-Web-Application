@@ -1,0 +1,167 @@
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: #fdfcf7;
+  color: #333;
+}
+
+/* LOGIN PAGE */
+.auth-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #9cecfb, #65c7f7, #0052d4);
+}
+.auth-container {
+  background: white;
+  padding: 2rem 3rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  text-align: center;
+}
+.auth-container h1 {
+  margin-bottom: 1rem;
+  color: #0078ff;
+}
+.form-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+button {
+  background: #0078ff;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+button:hover {
+  background: #005bcc;
+}
+.hidden {
+  display: none;
+}
+
+/* HOME PAGE */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 3rem;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo img {
+  width: 40px;
+  border-radius: 50%;
+}
+.logout-btn {
+  background: #ff4b5c;
+}
+.logout-btn:hover {
+  background: #d32f2f;
+}
+.intro {
+  text-align: center;
+  margin: 2rem 0;
+  color: #666;
+  font-size: 1.3rem;
+}
+.campaigns {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  padding: 0 2rem;
+}
+.card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  width: 300px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 6px 25px rgba(0,0,0,0.2);
+}
+.card img {
+  width: 100%;
+  border-radius: 16px 16px 0 0;
+  height: 180px;
+  object-fit: cover;
+}
+.card h4 {
+  margin: 10px;
+}
+.card p {
+  margin: 0 10px 10px;
+  font-size: 0.9rem;
+  color: #666;
+}
+.progress {
+  background: #eee;
+  height: 8px;
+  margin: 0 10px;
+  border-radius: 5px;
+}
+.bar {
+  height: 8px;
+  border-radius: 5px;
+  background: #ff7f50;
+}
+.buttons {
+  display: flex;
+  justify-content: space-around;
+  margin: 15px 0;
+}
+.donate-btn {
+  background: #00c896;
+}
+.volunteer-btn {
+  background: white;
+  color: #0078ff;
+  border: 1px solid #0078ff;
+}
+.volunteer-btn:hover {
+  background: #0078ff;
+  color: white;
+}
+footer {
+  text-align: center;
+  margin-top: 2rem;
+  padding: 1rem;
+  background: white;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+}
+.fade-in {
+  animation: fadeIn 1s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+select, textarea {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  resize: none;
+}
+select:focus, textarea:focus, input:focus {
+  border-color: #0078ff;
+  outline: none;
+  box-shadow: 0 0 6px rgba(0,120,255,0.3);
+}

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGO Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0078ff;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --muted: #6b7280;
+            --radius: 14px;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(180deg, var(--bg) 0%, #fff 100%);
+            color: #111827;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            background: var(--card);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0;
+        }
+        
+        .label {
+            color: var(--muted);
+            margin-top: 0.5rem;
+        }
+        
+        .table-container {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        th {
+            background: var(--bg);
+            color: var(--muted);
+            font-weight: 500;
+        }
+        
+        .tab-buttons {
+            margin-bottom: 1rem;
+        }
+        
+        .tab-button {
+            background: var(--bg);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 1rem;
+            margin-right: 1rem;
+        }
+        
+        .tab-button.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+
+        .refresh-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .refresh-btn:hover {
+            background: var(--primary-dark);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+        
+        <div class="dashboard">
+            <div class="card">
+                <p class="stat" id="volunteer-count">0</p>
+                <p class="label">Total Volunteers</p>
+            </div>
+            <div class="card">
+                <p class="stat" id="donation-count">0</p>
+                <p class="label">Total Donations</p>
+            </div>
+            <div class="card">
+                <p class="stat" id="total-amount">$0</p>
+                <p class="label">Total Amount Received</p>
+            </div>
+        </div>
+
+        <button class="refresh-btn" onclick="refreshData()">Refresh Data</button>
+
+        <div class="tab-buttons">
+            <button class="tab-button active" onclick="showTab('volunteers')">Volunteers</button>
+            <button class="tab-button" onclick="showTab('donations')">Donations</button>
+        </div>
+
+        <div class="tab-content active" id="volunteers-tab">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Skills</th>
+                            <th>Availability</th>
+                            <th>Registration Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="volunteers-table">
+                        <!-- Volunteer data will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="tab-content" id="donations-tab">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Amount</th>
+                            <th>Payment ID</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="donations-table">
+                        <!-- Donation data will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            document.querySelector(`button[onclick="showTab('${tabName}')"]`).classList.add('active');
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleString();
+        }
+
+        function formatAmount(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD'
+            }).format(amount);
+        }
+
+        async function refreshData() {
+            try {
+                // Fetch volunteers
+                const volunteersResponse = await fetch('/api/volunteers');
+                const volunteers = await volunteersResponse.json();
+                
+                // Update volunteers count
+                document.getElementById('volunteer-count').textContent = volunteers.length;
+                
+                // Update volunteers table
+                const volunteersTable = document.getElementById('volunteers-table');
+                volunteersTable.innerHTML = volunteers.map(v => `
+                    <tr>
+                        <td>${v.name}</td>
+                        <td>${v.email}</td>
+                        <td>${v.phone}</td>
+                        <td>${v.skills}</td>
+                        <td>${v.availability}</td>
+                        <td>${formatDate(v.created_at)}</td>
+                    </tr>
+                `).join('');
+
+                // Fetch donations
+                const donationsResponse = await fetch('/api/donations');
+                const donations = await donationsResponse.json();
+                
+                // Update donations count and total amount
+                document.getElementById('donation-count').textContent = donations.length;
+                const totalAmount = donations.reduce((sum, d) => sum + d.amount, 0);
+                document.getElementById('total-amount').textContent = formatAmount(totalAmount);
+                
+                // Update donations table
+                const donationsTable = document.getElementById('donations-table');
+                donationsTable.innerHTML = donations.map(d => `
+                    <tr>
+                        <td>${d.email}</td>
+                        <td>${formatAmount(d.amount)}</td>
+                        <td>${d.payment_id}</td>
+                        <td>${d.status}</td>
+                        <td>${formatDate(d.created_at)}</td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                alert('Error refreshing data. Please try again.');
+            }
+        }
+
+        // Load data when page loads
+        refreshData();
+    </script>
+</body>
+</html>

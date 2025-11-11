@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Donate — NGO Platform</title>
+
+  <!-- Google font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <script src="/js/main.js" defer></script>
+
+  <style>
+    :root{
+      --primary:#0078ff;
+      --accent:#00c896;
+      --bg:#f6f9fc;
+      --card:#ffffff;
+      --muted:#6b7280;
+      --radius:14px;
+      --glass: rgba(255,255,255,0.6);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:'Poppins',sans-serif;
+      background:linear-gradient(180deg,var(--bg),#fff);
+      color:#0b1220;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:2rem;
+    }
+
+    /* container */
+    .auth-container{
+      width:100%;
+      max-width:760px;
+      background:var(--card);
+      border-radius:16px;
+      box-shadow:0 12px 40px rgba(2,6,23,0.08);
+      padding:2rem;
+      display:grid;
+      grid-template-columns:1fr 360px;
+      gap:1.25rem;
+      align-items:start;
+    }
+    @media (max-width:900px){
+      .auth-container{grid-template-columns:1fr; padding:1.25rem}
+    }
+
+    .left{
+      padding-right:0.5rem;
+    }
+    h1{
+      margin:0 0 .4rem 0;
+      font-size:1.4rem;
+      color:var(--primary);
+    }
+    p.lead{margin:0 0 1rem 0;color:var(--muted);font-weight:500}
+
+    .form-box{
+      display:flex;
+      flex-direction:column;
+      gap:.6rem;
+    }
+    label{font-size:.85rem;color:var(--muted);font-weight:600}
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
+    select{
+      width:100%;
+      padding:.65rem .75rem;
+      border-radius:10px;
+      border:1px solid rgba(15,23,42,0.06);
+      background:#fff;
+      font-size:.95rem;
+    }
+    input:focus, select:focus{outline:3px solid rgba(0,120,255,0.08)}
+    .row{display:flex;gap:.6rem}
+    .row .col{flex:1}
+
+    .hint{font-size:.85rem;color:var(--muted);margin-bottom:.6rem}
+
+    button.primary{
+      background:linear-gradient(90deg,var(--primary),#00c6ff);
+      color:#fff;
+      border:0;
+      padding:.65rem .9rem;
+      border-radius:10px;
+      font-weight:700;
+      cursor:pointer;
+      box-shadow:0 10px 30px rgba(0,120,255,0.12);
+    }
+    button.primary[disabled]{opacity:.6;cursor:not-allowed}
+
+    /* right summary card */
+    .summary{
+      background:linear-gradient(180deg,#f9fbff,#fff);
+      border-radius:12px;
+      padding:1rem;
+      border:1px solid rgba(10,10,10,0.03);
+    }
+    .summary h4{margin:.15rem 0 .6rem 0;color:#0b1220}
+    .summary .line{display:flex;justify-content:space-between;color:var(--muted);padding:.45rem 0;border-top:1px dashed rgba(10,10,10,0.03)}
+    .summary .total{font-weight:700;color:var(--primary);font-size:1.05rem}
+
+    footer.small{grid-column:1/-1;text-align:center;color:var(--muted);margin-top:.5rem;font-size:.9rem}
+
+    /* Modal / overlay */
+    .overlay{
+      position:fixed;inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background:rgba(2,6,23,0.45);
+      z-index:999;
+      padding:1rem;
+    }
+    .modal{
+      width:100%;
+      max-width:520px;
+      background:var(--card);
+      border-radius:14px;
+      padding:1.25rem;
+      text-align:center;
+      box-shadow:0 20px 60px rgba(2,6,23,0.18);
+    }
+    .modal h3{margin:.25rem 0 .6rem 0}
+    .methods{display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center}
+    .method{
+      padding:.6rem .85rem;border-radius:10px;border:1px solid rgba(10,10,10,0.06);
+      cursor:pointer;background:#fff;min-width:110px;font-weight:600;
+    }
+    .method.selected{background:linear-gradient(90deg,var(--primary),#00c6ff);color:#fff;border-color:transparent;box-shadow:0 8px 20px rgba(0,120,255,0.12)}
+    .progress{height:8px;background:#eef6ff;border-radius:999px;margin-top:.8rem;overflow:hidden}
+    .progress > span{display:block;height:100%;background:linear-gradient(90deg,#00c896,#00c6ff);width:0%;transition:width .5s ease}
+
+    /* success */
+    .success{
+      display:none;
+      gap:1rem;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      padding:1rem;
+    }
+    .check{font-size:3rem;color:var(--accent)}
+    /* confetti */
+    .confetti{position:fixed;top:-10vh;width:9px;height:14px;border-radius:2px;z-index:1500;opacity:0;pointer-events:none;transform:translateY(0)}
+    @keyframes confFall{to{transform:translateY(120vh) rotate(720deg);opacity:1}}
+    /* small accessibility */
+    .visually-hidden{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap}
+  </style>
+</head>
+<body>
+  <div class="auth-container" role="main" aria-live="polite">
+    <div class="left">
+      <h1>Make a Donation</h1>
+      <p class="lead">Your contribution helps us reach more people. Secure & simple checkout.</p>
+
+      <form id="donationForm" class="form-box" novalidate>
+        <div>
+          <label for="name">Full name</label>
+          <input id="name" name="name" type="text" required placeholder="Your full name" />
+        </div>
+
+        <div>
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" required placeholder="you@example.com" />
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <label for="amount">Amount (₹)</label>
+            <input id="amount" name="amount" type="number" min="1" required placeholder="500" />
+          </div>
+          <div class="col">
+            <label for="campaign">Campaign</label>
+            <select id="campaign" name="campaign" required>
+              <option value="">Choose campaign</option>
+              <option>Education for All</option>
+              <option>Clean Water Initiative</option>
+              <option>Tree Plantation</option>
+              <option>Women Empowerment</option>
+              <option>Animal Rescue</option>
+              <option>Food for Everyone</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="hint">We use a demo payment modal — no real card data is collected.</div>
+
+        <div style="display:flex;gap:.6rem;align-items:center">
+          <button type="submit" class="primary" id="proceedBtn">Proceed to Pay</button>
+          <button type="button" onclick="location.href='home.html'" style="background:transparent;border:0;color:var(--muted);cursor:pointer">Cancel</button>
+        </div>
+
+      </form>
+
+      <footer class="small">By donating, you agree to our terms and privacy policy.</footer>
+    </div>
+
+    <aside class="summary" aria-hidden="false">
+      <h4>Donation summary</h4>
+      <div class="line"><span>Name</span><span id="s-name">—</span></div>
+      <div class="line"><span>Campaign</span><span id="s-campaign">—</span></div>
+      <div class="line"><span>Amount</span><span id="s-amount">₹0</span></div>
+      <div class="line"><span>Processing fee</span><span id="s-fee">₹0</span></div>
+      <div class="line total"><span>Total</span><span id="s-total">₹0</span></div>
+    </aside>
+  </div>
+
+  <!-- overlay modal -->
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal" id="modal">
+      <h3 id="modalTitle">Select Payment Method</h3>
+
+      <div class="methods" id="methods">
+        <div class="method" data-method="Card" tabindex="0">💳 Card</div>
+        <div class="method" data-method="UPI" tabindex="0">📱 UPI</div>
+        <div class="method" data-method="NetBanking" tabindex="0">🏦 NetBanking</div>
+      </div>
+
+      <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+
+      <div class="success" id="successBox" aria-live="polite">
+        <div class="check">✅</div>
+        <h4>Payment successful</h4>
+        <p>Thank you for your generosity — you will receive a confirmation by email.</p>
+        <button class="primary" id="doneBtn">Back to Home</button>
+      </div>
+
+      <div class="visually-hidden" id="announce"></div>
+    </div>
+  </div>
+
+  <script>
+    // summary updates
+    const nameEl = document.getElementById('name');
+    const emailEl = document.getElementById('email');
+    const amountEl = document.getElementById('amount');
+    const campaignEl = document.getElementById('campaign');
+
+    const sName = document.getElementById('s-name');
+    const sCampaign = document.getElementById('s-campaign');
+    const sAmount = document.getElementById('s-amount');
+    const sFee = document.getElementById('s-fee');
+    const sTotal = document.getElementById('s-total');
+
+    function calc() {
+      const amt = Number(amountEl.value) || 0;
+      const fee = Math.max(1, Math.round(amt * 0.02)); // demo fee 2%
+      sName.textContent = nameEl.value || '—';
+      sCampaign.textContent = campaignEl.value || '—';
+      sAmount.textContent = '₹' + amt.toLocaleString();
+      sFee.textContent = '₹' + fee.toLocaleString();
+      sTotal.textContent = '₹' + (amt + fee).toLocaleString();
+    }
+
+    [nameEl,emailEl,amountEl,campaignEl].forEach(i => i && i.addEventListener('input', calc));
+    calc();
+
+    // modal & payment simulation
+    const form = document.getElementById('donationForm');
+    const overlay = document.getElementById('overlay');
+    const methods = document.getElementById('methods');
+    const methodEls = methods.querySelectorAll('.method');
+    const progressBar = document.getElementById('progressBar');
+    const successBox = document.getElementById('successBox');
+    const modalTitle = document.getElementById('modalTitle');
+    const announce = document.getElementById('announce');
+
+    let selectedMethod = 'Card';
+
+    methodEls.forEach(m=>{
+      m.addEventListener('click', ()=> selectMethod(m.dataset.method,m));
+      m.addEventListener('keydown', (e)=> { if(e.key==='Enter' || e.key===' ') { e.preventDefault(); selectMethod(m.dataset.method,m); } });
+    });
+
+    function selectMethod(name,el){
+      selectedMethod = name;
+      methodEls.forEach(x=>x.classList.remove('selected'));
+      el.classList.add('selected');
+      modalTitle.textContent = 'Pay with ' + name;
+      announce.textContent = name + ' selected';
+    }
+
+    // default select first
+    selectMethod('Card', methodEls[0]);
+
+    form.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      // basic validation
+      if(!form.checkValidity()){ form.reportValidity(); return; }
+      overlay.style.display = 'flex';
+      overlay.setAttribute('aria-hidden','false');
+      progressBar.style.width = '0%';
+      successBox.style.display = 'none';
+      modalTitle.textContent = 'Processing payment via ' + selectedMethod;
+      simulatePayment();
+    });
+
+    function simulatePayment(){
+      // animate progress bar
+      let pct = 0;
+      const interval = setInterval(()=>{
+        pct += Math.random() * 18;
+        if(pct >= 100) pct = 100;
+        progressBar.style.width = pct + '%';
+        if(pct >= 100) {
+          clearInterval(interval);
+          setTimeout(() => {
+            showSuccess();
+          }, 600);
+        }
+      }, 250);
+    }
+
+    function showSuccess(){
+      modalTitle.style.display = 'none';
+      methods.style.display = 'none';
+      document.querySelector('.progress').style.display = 'none';
+      successBox.style.display = 'flex';
+      announce.textContent = 'Payment successful';
+      launchConfetti();
+    }
+
+    document.getElementById('doneBtn').addEventListener('click', ()=> {
+      overlay.style.display = 'none';
+      overlay.setAttribute('aria-hidden','true');
+      window.location.href = 'home.html';
+    });
+
+    // confetti (lightweight)
+    function launchConfetti(){
+      const colors = ['#ff0a54','#ff477e','#ff7096','#ff85a1','#fbb1bd','#00b4d8','#90e0ef','#0077b6','#00f5d4'];
+      for(let i=0;i<60;i++){
+        const c = document.createElement('div');
+        c.className = 'confetti';
+        c.style.background = colors[Math.floor(Math.random()*colors.length)];
+        c.style.left = (Math.random()*100) + 'vw';
+        c.style.transform = `rotate(${Math.random()*360}deg)`;
+        c.style.width = (6 + Math.random()*10) + 'px';
+        c.style.height = (8 + Math.random()*14) + 'px';
+        c.style.opacity = 0.95;
+        c.style.animation = `confFall ${2 + Math.random()*1.6}s linear forwards`;
+        document.body.appendChild(c);
+        setTimeout(()=> c.remove(), 3500);
+      }
+    }
+  </script>
+</body>
+</html>

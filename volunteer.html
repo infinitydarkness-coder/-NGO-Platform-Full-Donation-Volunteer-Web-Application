@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Volunteer — NGO Platform</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <script src="/js/main.js" defer></script>
+
+  <style>
+    :root{
+      --primary:#0078ff;
+      --accent:#00c896;
+      --bg:#f6f9fc;
+      --card:#ffffff;
+      --muted:#6b7280;
+      --radius:12px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:'Poppins',sans-serif;
+      background:linear-gradient(180deg,var(--bg),#fff);
+      color:#0b1220;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:2rem;
+    }
+    .message {
+      display: none;
+      padding: 1rem;
+      margin-top: 1rem;
+      border-radius: var(--radius);
+    }
+    .message.success {
+      display: block;
+      background: #e6fff0;
+      color: #00783e;
+    }
+    .message.error {
+      display: block;
+      background: #ffe6e6;
+      color: #780000;
+    }
+
+    .auth-container{
+      max-width:820px;
+      width:100%;
+      background:var(--card);
+      border-radius:14px;
+      padding:1.25rem;
+      box-shadow:0 14px 40px rgba(2,6,23,0.07);
+      display:grid;
+      grid-template-columns:1fr 300px;
+      gap:1rem;
+    }
+    @media (max-width:900px){ .auth-container{grid-template-columns:1fr;padding:1rem} }
+
+    h1{margin:0;color:var(--primary);font-size:1.4rem}
+    p.lead{margin:.25rem 0 1rem 0;color:var(--muted)}
+
+    .form-box{display:flex;flex-direction:column;gap:.6rem}
+    label{font-size:.85rem;color:var(--muted);font-weight:600}
+    input, textarea, select{
+      padding:.65rem .75rem;border-radius:10px;border:1px solid rgba(10,10,10,0.06);font-size:.95rem;
+    }
+    textarea{resize:vertical}
+    .primary{background:linear-gradient(90deg,var(--primary),#00c6ff);color:#fff;border:0;padding:.65rem;border-radius:10px;font-weight:700;cursor:pointer}
+    .primary[disabled]{opacity:.6;cursor:not-allowed}
+
+    .info{
+      background:linear-gradient(180deg,#f9fbff,#fff);
+      padding:1rem;border-radius:10px;border:1px solid rgba(10,10,10,0.03);
+    }
+
+    .overlay{
+      position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.45);z-index:999;
+    }
+    .popup{
+      background:var(--card);padding:1rem;border-radius:12px;max-width:420px;text-align:center;box-shadow:0 20px 60px rgba(2,6,23,0.12);
+    }
+    .check{font-size:3rem;color:var(--accent)}
+    .confetti{position:fixed;top:-10vh;width:9px;height:14px;border-radius:2px;z-index:1500}
+  </style>
+</head>
+<body>
+  <div class="auth-container" role="main" aria-live="polite">
+    <div>
+      <h1>Join as a Volunteer</h1>
+      <p class="lead">Make an impact in your community — one small action at a time.</p>
+
+      <form id="volunteerForm" class="form-box" novalidate>
+        <div>
+          <label for="name">Full name</label>
+          <input id="name" name="name" type="text" required placeholder="Your full name" />
+        </div>
+
+        <div class="row" style="display:flex;gap:.6rem">
+          <div style="flex:1">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required placeholder="you@example.com" />
+          </div>
+          <div style="flex:1">
+            <label for="phone">Phone</label>
+            <input id="phone" name="phone" type="tel" required placeholder="+91 9xxxxxxxxx" />
+          </div>
+        </div>
+
+        <div>
+          <label for="interest">Interest area</label>
+          <select id="interest" name="interest" required>
+            <option value="">Select an area</option>
+            <option>Education</option>
+            <option>Environment</option>
+            <option>Animal Care</option>
+            <option>Community Outreach</option>
+            <option>Women Empowerment</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="message">Tell us why you'd like to volunteer (optional)</label>
+          <textarea id="message" name="message" rows="4" placeholder="A short note..."></textarea>
+        </div>
+
+        <div style="display:flex;gap:.6rem;align-items:center">
+          <button type="submit" class="primary" id="registerBtn">Register</button>
+          <button type="button" style="background:transparent;border:0;color:var(--muted);cursor:pointer" onclick="location.href='home.html'">Cancel</button>
+        </div>
+      </form>
+    </div>
+
+    <aside class="info" aria-hidden="false">
+      <h4 style="margin:.1rem 0 .6rem 0">What to expect</h4>
+      <p style="margin:0 .0 .6rem 0;color:var(--muted)">After registration our team will contact you within 3 business days to onboard you and share upcoming opportunities.</p>
+      <p style="font-size:.9rem;color:var(--muted);margin:0">We value your privacy — we won't share your details.</p>
+    </aside>
+  </div>
+
+  <div class="overlay" id="overlay" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="popup" id="popup">
+      <div id="loadingBox">
+        <h3>Submitting your registration…</h3>
+        <p style="color:var(--muted)">Please wait a moment</p>
+      </div>
+
+      <div id="successBox" style="display:none">
+        <div class="check">✅</div>
+        <h3>Registration successful</h3>
+        <p>Welcome aboard — we'll contact you soon.</p>
+        <div style="margin-top:.6rem">
+          <button class="primary" onclick="closePopup()">Back to Home</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('volunteerForm');
+    const overlay = document.getElementById('overlay');
+    const loadingBox = document.getElementById('loadingBox');
+    const successBox = document.getElementById('successBox');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if(!form.checkValidity()){ form.reportValidity(); return; }
+      overlay.style.display = 'flex';
+      overlay.setAttribute('aria-hidden','false');
+      loadingBox.style.display = 'block';
+      successBox.style.display = 'none';
+
+      // simulate server
+      setTimeout(() => {
+        loadingBox.style.display = 'none';
+        successBox.style.display = 'block';
+        launchConfetti();
+      }, 1200);
+    });
+
+    function closePopup(){
+      overlay.style.display = 'none';
+      overlay.setAttribute('aria-hidden','true');
+      window.location.href = 'home.html';
+    }
+
+    function launchConfetti(){
+      const colors = ['#ff0a54','#ff477e','#ff7096','#ff85a1','#fbb1bd','#00b4d8','#90e0ef','#0077b6','#00f5d4'];
+      for(let i=0;i<60;i++){
+        const c = document.createElement('div');
+        c.className = 'confetti';
+        c.style.background = colors[Math.floor(Math.random()*colors.length)];
+        c.style.left = (Math.random()*100) + 'vw';
+        c.style.transform = `rotate(${Math.random()*360}deg)`;
+        c.style.width = (6 + Math.random()*10) + 'px';
+        c.style.height = (8 + Math.random()*14) + 'px';
+        c.style.opacity = 0.95;
+        c.style.animation = `confFall ${2 + Math.random()*1.4}s linear forwards`;
+        document.body.appendChild(c);
+        setTimeout(()=> c.remove(), 3500);
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NGO Home</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #0078ff;
+      --primary-dark: #005bcc;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --muted: #6b7280;
+      --radius: 14px;
+      --glass: rgba(255, 255, 255, 0.6);
+    }
+
+    /* Reset & basics */
+    * {
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      height: 100%
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(180deg, var(--bg) 0%, #fff 100%);
+      color: #111827;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none
+    }
+
+    /* Skip link for accessibility */
+    .skip-link {
+      position: absolute;
+      left: -999px;
+      top: auto;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+    }
+
+    .skip-link:focus {
+      left: 1rem;
+      top: 1rem;
+      width: auto;
+      height: auto;
+      background: #000;
+      color: #fff;
+      padding: .5rem .75rem;
+      border-radius: 6px;
+      z-index: 9999;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      background: linear-gradient(90deg, var(--primary), #00c6ff);
+      color: white;
+      box-shadow: 0 6px 20px rgba(2, 6, 23, 0.12);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+
+    .logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      box-shadow: inset 0 -6px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.05rem;
+      letter-spacing: 0.2px;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: .5rem;
+    }
+
+    .btn {
+      border: 0;
+      background: white;
+      color: var(--primary);
+      padding: .55rem .9rem;
+      border-radius: 999px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform .12s ease, box-shadow .12s;
+      box-shadow: 0 6px 18px rgba(1, 35, 97, 0.08);
+    }
+
+    .btn:active {
+      transform: translateY(1px) scale(.99)
+    }
+
+    .btn--ghost {
+      background: transparent;
+      color: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: none;
+    }
+
+    .btn--primary {
+      background: linear-gradient(90deg, var(--primary), #00c6ff);
+      color: #fff;
+      box-shadow: 0 8px 26px rgba(0, 120, 255, 0.18);
+    }
+
+    .btn:focus {
+      outline: 3px solid rgba(0, 120, 255, 0.14);
+      outline-offset: 2px
+    }
+
+    /* mobile hamburger */
+    .hamburger {
+      display: none;
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.12);
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: 0;
+      color: white;
+    }
+
+    /* Hero */
+    .hero {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 3.25rem 1rem;
+      gap: 1.25rem;
+      background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.06)), url('images/ngo-hero.jpg');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      min-height: 320px;
+      position: relative;
+    }
+
+    .hero .container {
+      max-width: 1100px;
+      width: 100%;
+      padding: 0 1rem;
+    }
+
+    .hero h2 {
+      margin: 0;
+      font-size: 2rem;
+      line-height: 1.05;
+      text-shadow: 0 6px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .hero p {
+      margin: .6rem 0 1.2rem;
+      color: #eef6ff;
+      font-weight: 500;
+    }
+
+    .hero .hero-actions {
+      display: flex;
+      gap: .7rem;
+      flex-wrap: wrap;
+      justify-content: center
+    }
+
+    /* Campaigns grid */
+    .campaigns {
+      padding: 2rem 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.1rem;
+      margin-top: -60px;
+      /* lift cards onto hero */
+    }
+
+    .campaign-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(2, 6, 23, 0.07);
+      transform: translateY(20px);
+      transition: transform .45s cubic-bezier(.2, .9, .2, 1), box-shadow .25s;
+      display: flex;
+      flex-direction: column;
+      min-height: 320px;
+      border: 1px solid rgba(10, 10, 10, 0.03);
+    }
+
+    .campaign-card.visible {
+      transform: translateY(0);
+      opacity: 1
+    }
+
+    .campaign-card img {
+      width: 100%;
+      height: 170px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-body {
+      padding: 1rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column
+    }
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      margin-bottom: .5rem
+    }
+
+    .badge {
+      background: linear-gradient(90deg, var(--primary), #00c6ff);
+      color: white;
+      padding: .25rem .5rem;
+      border-radius: 8px;
+      font-size: .75rem;
+      font-weight: 600;
+    }
+
+    .campaign-card h3 {
+      margin: .15rem 0;
+      font-size: 1.05rem;
+      color: var(--primary)
+    }
+
+    .campaign-card p {
+      margin: 0 .0 1rem;
+      color: var(--muted);
+      font-size: .95rem;
+      line-height: 1.35
+    }
+
+    .card-actions {
+      display: flex;
+      gap: .5rem;
+      align-items: center;
+      margin-top: auto
+    }
+
+    .ghost-link {
+      background: transparent;
+      border: 1px solid rgba(0, 120, 255, 0.08);
+      padding: .45rem .6rem;
+      border-radius: 8px;
+      color: var(--primary);
+      cursor: pointer
+    }
+
+    .campaign-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 18px 44px rgba(2, 6, 23, 0.12)
+    }
+
+    .campaign-card:focus-within {
+      box-shadow: 0 18px 44px rgba(0, 120, 255, 0.10)
+    }
+
+    /* sticky donate CTA */
+    .sticky-donate {
+      position: fixed;
+      right: 1rem;
+      bottom: 1rem;
+      z-index: 80;
+      display: flex;
+      gap: .6rem;
+      align-items: center;
+      background: linear-gradient(90deg, var(--primary), #00c6ff);
+      color: white;
+      padding: .6rem .9rem;
+      border-radius: 999px;
+      box-shadow: 0 16px 48px rgba(0, 120, 255, 0.18);
+      cursor: pointer;
+      border: 0;
+    }
+
+    .sticky-donate small {
+      opacity: .95;
+      font-weight: 600
+    }
+
+    /* footer */
+    footer {
+      margin-top: 2rem;
+      padding: 1.25rem;
+      text-align: center;
+      color: #fff;
+      background: linear-gradient(90deg, var(--primary), #00c6ff);
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+
+    /* responsiveness */
+    @media (max-width:900px) {
+      .nav-buttons {
+        display: none
+      }
+
+      .hamburger {
+        display: flex
+      }
+
+      .hero {
+        padding: 2.25rem 1rem;
+        min-height: 260px
+      }
+
+      .campaign-card img {
+        height: 150px
+      }
+    }
+
+    @media (max-width:480px) {
+      header {
+        padding: .6rem .9rem
+      }
+
+      .hero h2 {
+        font-size: 1.35rem
+      }
+
+      .campaign-card {
+        min-height: 280px
+      }
+
+      .sticky-donate {
+        right: .6rem;
+        bottom: .6rem;
+        padding: .45rem .6rem
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <header role="banner">
+    <div class="brand" aria-hidden="false">
+      <div class="logo" aria-hidden="true">NGO</div>
+      <h1>NGO Platform</h1>
+    </div>
+
+    <nav role="navigation" aria-label="Main navigation">
+      <div class="nav-buttons" aria-hidden="false">
+        <button class="btn" onclick="location.href='payment.html'">Donate</button>
+        <button class="btn btn--ghost" onclick="location.href='volunteer.html'">Volunteer</button>
+        <!-- auth button gets replaced by script when logged in -->
+        <button class="btn btn--ghost" id="authBtn" onclick="location.href='index.html'">Login</button>
+      </div>
+
+      <button class="hamburger" id="hamb" aria-label="Open menu" aria-expanded="false">
+        ☰
+      </button>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero" role="region" aria-label="Hero">
+      <div class="container">
+        <h2>Together We Can Make a Difference</h2>
+        <p>Join hands with us to build a brighter, kinder, and more sustainable world.</p>
+        <div class="hero-actions">
+
+          <button class="btn btn--primary" onclick="location.href='payment.html'">Donate Now</button>
+          <button class="btn" onclick="location.href='volunteer.html'">Become a Volunteer</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="campaigns" aria-label="Campaigns and initiatives">
+      <article class="campaign-card" tabindex="0">
+        <img loading="lazy" src="src/campaign-education.jpg" alt="Children studying in a classroom" />
+        <div class="card-body">
+          <div class="card-head">
+            <span class="badge">Education</span>
+            <small style="color:var(--muted)">Community</small>
+          </div>
+          <h3>Education for All</h3>
+          <p>Help us bring learning opportunities to underprivileged children with resources and teachers.</p>
+          <div class="card-actions">
+            <button class="btn" onclick="location.href='payment.html'">Donate</button>
+            <button class="ghost-link" onclick="location.href='volunteer.html'">Volunteer</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="campaign-card" tabindex="0">
+        <img loading="lazy" src="src/campaign-water.jpg" alt="Clean water well project" />
+        <div class="card-body">
+          <div class="card-head">
+            <span class="badge">Water</span>
+            <small style="color:var(--muted)">Health</small>
+          </div>
+          <h3>Clean Water Initiative</h3>
+          <p>Provide safe and clean drinking water to rural communities through wells and filtration systems.</p>
+          <div class="card-actions">
+            <button class="btn" onclick="location.href='payment.html'">Donate</button>
+            <button class="ghost-link" onclick="location.href='volunteer.html'">Volunteer</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="campaign-card" tabindex="0">
+        <img loading="lazy" src="src/campaign-environment.jpg" alt="Tree plantation event" />
+        <div class="card-body">
+          <div class="card-head">
+            <span class="badge">Environment</span>
+            <small style="color:var(--muted)">Green</small>
+          </div>
+          <h3>Tree Plantation Drive</h3>
+          <p>Join our mission to plant one million trees this year and restore local habitats.</p>
+          <div class="card-actions">
+            <button class="btn" onclick="location.href='payment.html'">Donate</button>
+            <button class="ghost-link" onclick="location.href='volunteer.html'">Volunteer</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="campaign-card" tabindex="0">
+        <img loading="lazy"
+          src="https://awareeveryonefoundation.org/wp-content/uploads/2022/11/women-empower-1170x730.jpg"
+          alt="Women empowerment program" />
+        <div class="card-body">
+          <div class="card-head">
+            <span class="badge">Empower</span>
+            <small style="color:var(--muted)">Gender</small>
+          </div>
+          <h3>Women Empowerment</h3>
+          <p>Support women with education, skills, and entrepreneurship training for sustainable livelihoods.</p>
+          <div class="card-actions">
+            <button class="btn" onclick="location.href='payment.html'">Donate</button>
+            <button class="ghost-link" onclick="location.href='volunteer.html'">Volunteer</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="campaign-card" tabindex="0">
+        <img loading="lazy" src="https://i.pinimg.com/736x/b6/12/aa/b612aad8cdaf447220ddf4dabb52443d.jpg"
+          alt="Animal rescue volunteers caring for a dog" />
+        <div class="card-body">
+          <div class="card-head">
+            <span class="badge">Animals</span>
+            <small style="color:var(--muted)">Care</small>
+          </div>
+          <h3>Animal Rescue</h3>
+          <p>Help rescue and rehabilitate stray and injured animals with medical care and foster homes.</p>
+          <div class="card-actions">
+            <button class="btn" onclick="location.href='payment.html'">Donate</button>
+            <button class="ghost-link" onclick="location.href='volunteer.html'">Volunteer</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="campaign-card" tabindex="0">
+        <img loading="lazy"
+          src="https://th.bing.com/th/id/OIP.yWzvs4GjJYZQKJPk7EQdhAHaD-?o=7&cb=12rm=3&rs=1&pid=ImgDetMain&o=7&rm=3"
+          alt="Community volunteers together" />
+        <div class="card-body">
+          <div class="card-head">
+            <span class="badge">Community</span>
+            <small style="color:var(--muted)">Outreach</small>
+          </div>
+          <h3>Become a Volunteer</h3>
+          <p>Be part of community outreach programs and make a direct local impact with your time.</p>
+          <div class="card-actions">
+            <button class="btn" onclick="location.href='payment.html'">Donate</button>
+            <button class="ghost-link" onclick="location.href='volunteer.html'">Volunteer</button>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <button class="sticky-donate" onclick="location.href='payment.html'" aria-label="Donate now">
+    💙 <small style="margin-left:.45rem">Donate</small>
+  </button>
+
+  <footer role="contentinfo">
+    <p>© 2025 NGO Platform | All Rights Reserved</p>
+  </footer>
+
+  <script>
+    // mobile menu toggle
+    const hamb = document.getElementById('hamb');
+    const navButtons = document.querySelector('.nav-buttons');
+    hamb?.addEventListener('click', () => {
+      const expanded = hamb.getAttribute('aria-expanded') === 'true';
+      hamb.setAttribute('aria-expanded', (!expanded).toString());
+      navButtons.style.display = expanded ? 'none' : 'flex';
+    });
+
+    // simple button press animation
+    document.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('mousedown', () => btn.style.transform = 'scale(.98)');
+      btn.addEventListener('mouseup', () => btn.style.transform = 'scale(1)');
+      btn.addEventListener('mouseleave', () => btn.style.transform = 'scale(1)');
+    });
+
+    // scroll reveal for campaign cards
+    const cards = document.querySelectorAll('.campaign-card');
+    const revealOnScroll = () => {
+      const trigger = window.innerHeight * 0.85;
+      cards.forEach(c => {
+        const top = c.getBoundingClientRect().top;
+        if (top < trigger) c.classList.add('visible');
+      });
+    };
+    window.addEventListener('scroll', revealOnScroll);
+    window.addEventListener('load', revealOnScroll);
+    revealOnScroll();
+
+    // --- new: show logged-in user and logout ---
+    (function () {
+      const authBtn = document.getElementById('authBtn');
+      if (!authBtn) return;
+      const raw = localStorage.getItem('ngoUser');
+      if (!raw) return; // keep "Login" as-is when not logged in
+
+      let user;
+      try { user = JSON.parse(raw); } catch (e) { user = null; }
+      if (!user) return;
+
+      // replace login button with user name and logout
+      authBtn.textContent = 'Hi, ' + (user.name || user.email);
+      authBtn.classList.remove('btn--ghost');
+      authBtn.classList.add('btn--primary');
+      authBtn.onclick = null;
+      authBtn.setAttribute('aria-label', 'User menu');
+
+      // add logout button
+      const logout = document.createElement('button');
+      logout.className = 'btn btn--ghost';
+      logout.textContent = 'Logout';
+      logout.style.marginLeft = '.45rem';
+      logout.addEventListener('click', () => {
+        localStorage.removeItem('ngoUser');
+        // refresh to update UI; could redirect to index
+        window.location.href = 'index.html';
+      });
+
+      authBtn.insertAdjacentElement('afterend', logout);
+    })();
+    // Example: login
+    fetch("http://localhost/ngo_backend/login.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `email=${email}&password=${password}`
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === "success") {
+          document.querySelector("#username").textContent = data.name;
+          document.querySelector("#loginBtn").style.display = "none";
+          document.querySelector("#logoutBtn").style.display = "block";
+        } else {
+          alert(data.message);
+        }
+      });
+
+  </script>
+</body>
+
+</html>

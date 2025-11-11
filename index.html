@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NGO Platform - Login</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="auth-body">
+  <div class="auth-container fade-in">
+    <h1>Welcome to <span class="logo">NGO Platform</span></h1>
+
+    <div class="form-box" id="loginForm">
+      <h2>Login</h2>
+      <input id="loginEmail" type="email" placeholder="Email" />
+      <input id="loginPassword" type="password" placeholder="Password" />
+      <button onclick="login()">Login</button>
+      <p>Don’t have an account? <a href="#" onclick="toggleForm();return false;">Register</a></p>
+    </div>
+
+    <div class="form-box hidden" id="registerForm">
+      <h2>Register</h2>
+      <input id="registerName" type="text" placeholder="Full Name" />
+      <input id="registerEmail" type="email" placeholder="Email" />
+      <input id="registerPassword" type="password" placeholder="Password" />
+      <button onclick="register()">Register</button>
+      <p>Already have an account? <a href="#" onclick="toggleForm();return false;">Login</a></p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
